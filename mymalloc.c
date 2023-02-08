@@ -65,8 +65,8 @@ struct meta *allocate_space(struct meta *current_block, size_t size){
         new_block->prev = current_block;
 
         /*
-         * The remaining space of the current block should equal the requested space.
-         * Use this remaining space of the current block to allocate with the exact
+         * The remaining space of the current block should now equal the requested space.
+         * Use this remaining space of the current block to allocate the exact
          * requested size and mark as reserved.
          */
         current_block->size = size;
