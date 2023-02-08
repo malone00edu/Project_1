@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "mymalloc.h"
 
-int *myPtrs[1000]; //Store malloc pointers
+int *myPtrs[1000]; //Store malloc pointers. Arbitrary number chosen for array.
 
 int main() {
     // Testing malloc implementation.
