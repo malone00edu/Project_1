@@ -13,7 +13,7 @@ struct meta {
 // The head of the linked list.
 static struct meta *head = NULL;
 
-// Finds appropriate space for requested size.
+// Helper function. Finds appropriate space for requested size.
 struct meta *find_space(size_t size) {
 
     struct meta *current = head;
@@ -33,7 +33,7 @@ struct meta *find_space(size_t size) {
 
 }
 
-// Allocates space for requested size.
+// Helper function. Allocates space for requested size.
 struct meta *allocate_space(struct meta *current_block, size_t size){
 
     // If head is NULL. Initialize entirety of MEMORY_SIZE in memory array.
