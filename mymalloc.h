@@ -13,5 +13,8 @@
 
 static char memory[MEMORY_SIZE];
 
+struct meta *find_space(size_t size);
+struct meta *allocate_space(struct meta *current_block, size_t size);
+
 void *mymalloc(size_t size, char *file, int line);
 void myfree(void *ptr, char *file, int line);
