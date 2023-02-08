@@ -83,7 +83,7 @@ void *mymalloc(size_t size, char *file, int line){
         meta_ptr = create_space(NULL, size); // Allocate space.
         if(!meta_ptr){// If returned pointer is equal to NULL.
             fprintf(stderr,
-                    "Insufficient spaced for requested size. FILENAME: %s, LINE: %d", file, line);
+                    "Insufficient spaced for requested size. FILENAME: %s, LINE: %d\n", file, line);
             return NULL;
         }
         return  meta_ptr;
@@ -91,7 +91,7 @@ void *mymalloc(size_t size, char *file, int line){
     meta_ptr = seek_space(size); //Find the appropriate space for requested size.
     if(!meta_ptr){
         fprintf(stderr,
-                "Insufficient spaced for requested size. FILENAME: %s, LINE: %d", file, line);
+                "Insufficient spaced for requested size. FILENAME: %s, LINE: %d\n", file, line);
         return NULL;
     }
     meta_ptr = create_space(meta_ptr, size);
