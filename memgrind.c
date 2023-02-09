@@ -3,10 +3,14 @@
 
 int *myPtrs[1000]; //Store malloc pointers. Arbitrary number chosen for array.
 
+
+
 int main() {
     // Testing malloc implementation.
-    for(int i = 0; i < 9; i++){ // Allocate 500 bytes ten times. (Fills up memory completely)
+    for(int i = 0; i < 1; i++){
         myPtrs[i] = (int *) malloc(500);
+    }
+    for(int i = 0; i < 10; i++){
         printf("%d: %p\n", i, myPtrs[i]);
     }
     return 0;
