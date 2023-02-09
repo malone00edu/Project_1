@@ -109,7 +109,39 @@ void *mymalloc(size_t size, char *file, int line){
     return meta_ptr;
 
 }
-void myfree(void *ptr, char *file, int line){}
+// still working on it, the free doesn't seem to do what its intended but I was trying to go for the eager approach
+void myfree(void *ptr, char *file, int line) {
+    //if null return immediately
+    if (ptr == NULL) {
+        return;
+    }
+
+    struct meta *block_to_free = (struct meta *) (ptr - sizeof(struct meta));
+    assert(block_to_free->reserved == true);
+
+    block_to_free->reserved = false;
+
+    //if the previous block is not reserved merge with it.
+    if (block_to_free->prev != NULL && !block_to_free->prev->reserved) {
+        block_to_free->prev->next = block_to_free->next;
+        block_to_free->prev->size += sizeof(struct meta) + block_to_free->size;
+
+        if (block_to_free->next != NULL) {
+            block_to_free->next->prev = block_to_free->prev;
+        }
+    }
+
+    //if the next block is not reserved and merge with it.
+    if (block_to_free->next != NULL && !block_to_free->next->reserved) {
+        block_to_free->size += sizeof(struct meta) + block_to_free->next->size;
+        block_to_free->next = block_to_free->next->next;
+
+        if (block_to_free->next != NULL) {
+            block_to_free->next->prev = block_to_free;
+        }
+    }
+}
+
 
 
 
