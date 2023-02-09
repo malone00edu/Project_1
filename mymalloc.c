@@ -44,20 +44,28 @@ struct meta *allocate_space(struct meta *current_block, size_t size){
         head->prev = NULL;
         head->reserved = false;
         current_block = head;
+
+        // If current block size is equal to requested size.
+        if(current_block->size == size ){
+            current_block->size = size;
+            current_block->reserved = true;
+            return (void*) current_block + META_SIZE;
+        }
     }
 
-    // If size of requested size is equal to current block size.
-    if(current_block->size == size){
+    // If current block size less than requested size + metadata. Return NULL.
+    if(current_block->size < size + sizeof(struct meta)){
+        return NULL;
+    }
+
+    // If current block size is equal to requested size + metadata.
+    if(current_block->size == size + sizeof(struct meta)){
         current_block->size = size;
         current_block->reserved = true;
         return (void*) current_block + META_SIZE;
     }
-    // If size of requested size + metadata is greater than current block size. Return NULL.
-    if(current_block->size < size + sizeof(struct meta)){
-        return NULL;
-    }
     /*
-     * If size of requested size + metadata is less than current block size.
+     * If current block size is greater than requested size + metadata.
      * Extract extra space from current block size and create new free space with this extra space.
      * Mark new free space as not reserved.
      */
@@ -68,7 +76,6 @@ struct meta *allocate_space(struct meta *current_block, size_t size){
         new_block->reserved = false;
         new_block->next = current_block->next;
         new_block->prev = current_block;
-
         /*
          * The remaining space of the current block should now equal the requested size + metadata.
          * Use this remaining space of the current block to allocate and mark as reserved.
@@ -76,8 +83,9 @@ struct meta *allocate_space(struct meta *current_block, size_t size){
         current_block->size = size;
         current_block->reserved = true;
         current_block->next = new_block;
+        return (void*) current_block + META_SIZE;
     }
-    return (void*) current_block + META_SIZE; //Return exact position for user data.
+    return NULL;
 }
 
 void *mymalloc(size_t size, char *file, int line){
