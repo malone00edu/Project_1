@@ -76,9 +76,8 @@ struct meta *allocate_space(struct meta *current_block, size_t size){
         current_block->size = size;
         current_block->reserved = true;
         current_block->next = new_block;
-        return (void*) current_block + META_SIZE; //Return exact position for user data.
     }
-    //return (void*) current_block + META_SIZE; //Return exact position for user data.
+    return (void*) current_block + META_SIZE; //Return exact position for user data.
 }
 
 void *mymalloc(size_t size, char *file, int line){
