@@ -13,5 +13,14 @@ int main() {
     for(int i = 0; i < 10; i++){
         printf("%d: %p\n", i, myPtrs[i]);
     }
+    
+    //Testing free implementation.
+    for (int i = 0; i < 1; i++) {
+        free(myPtrs[i]);
+    }
+    
+    for(int i = 0; i < 10; i++){
+        printf("%d: %p\n", i, myPtrs[i]);
+    }
     return 0;
 }
