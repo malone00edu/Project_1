@@ -117,39 +117,36 @@ void *mymalloc(size_t size, char *file, int line){
     return meta_ptr;
 
 }
-// still working on it, the free doesn't seem to do what its intended but I was trying to go for the eager approach
+// free using eager approach
 void myfree(void *ptr, char *file, int line) {
-    //if null return immediately
-    if (ptr == NULL) {
+    if (!ptr) {
+        fprintf(stderr, "Cannot free a null pointer. FILENAME: %s, LINE: %d\n", file, line);
         return;
     }
-
-    struct meta *block_to_free = (struct meta *) (ptr - sizeof(struct meta));
-    assert(block_to_free->reserved == true);
-
-    block_to_free->reserved = false;
-
-    //if the previous block is not reserved merge with it.
-    if (block_to_free->prev != NULL && !block_to_free->prev->reserved) {
-        block_to_free->prev->next = block_to_free->next;
-        block_to_free->prev->size += sizeof(struct meta) + block_to_free->size;
-
-        if (block_to_free->next != NULL) {
-            block_to_free->next->prev = block_to_free->prev;
-        }
+    struct meta *meta_ptr = (struct meta *) ((char *) ptr - sizeof(struct meta));
+    if (!meta_ptr->reserved) {
+        fprintf(stderr, "Double free detected. FILENAME: %s, LINE: %d\n", file, line);
+        return;
     }
-
-    //if the next block is not reserved and merge with it.
-    if (block_to_free->next != NULL && !block_to_free->next->reserved) {
-        block_to_free->size += sizeof(struct meta) + block_to_free->next->size;
-        block_to_free->next = block_to_free->next->next;
-
-        if (block_to_free->next != NULL) {
-            block_to_free->next->prev = block_to_free;
+    meta_ptr->reserved = false;
+    // Coalesce with previous block if it's free
+    if (meta_ptr->prev && !meta_ptr->prev->reserved) {
+        meta_ptr->prev->next = meta_ptr->next;
+        meta_ptr->prev->size += sizeof(struct meta) + meta_ptr->size;
+        if (meta_ptr->next) {
+            meta_ptr->next->prev = meta_ptr->prev;
+        }
+        meta_ptr = meta_ptr->prev;
+    }
+    // Coalesce with next block if it's free
+    if (meta_ptr->next && !meta_ptr->next->reserved) {
+        meta_ptr->size += sizeof(struct meta) + meta_ptr->next->size;
+        meta_ptr->next = meta_ptr->next->next;
+        if (meta_ptr->next) {
+            meta_ptr->next->prev = meta_ptr;
         }
     }
 }
-
 
 
 
