@@ -1,10 +1,10 @@
 # Project_1
 2023 cs214 project 1
 
-How malloc works & its implementation:
+**How malloc works & its implementation:**
 
 
-How free works & its implementation:
+**How free works & its implementation:**
 
 In short, free() frees the memory associated with the given pointer, updates the header information, and coalesces adjacent free blocks (eager approach)to avoid memory fragmentation. 
 
@@ -16,7 +16,7 @@ Next, the function checks if the previous or next memory block is free, and if s
 
 
 
-Performance testing:
+**Performance testing:**
 
 //tests malloc and free<br /> 
 test1: Use malloc() and immediately free() a 1-byte chunk, 120 times.
