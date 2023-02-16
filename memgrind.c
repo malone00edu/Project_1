@@ -3,49 +3,43 @@
 
 int *myPtrs[1000]; //Store malloc pointers. Arbitrary number chosen for array.
 
-//testing malloc
+//malloc() and immediately free() a 1-byte chunk, 120 times.
 void test1(){
     int i;
-    char *pointers[10];
-    
-    //allocating 10 blocks of size 10
-    printf("\n1: Testing Malloc\n");
-    for (i = 0; i < 10; i++){
-        pointers[i] = (char*)malloc(10);
-        printf("%d: %p\n", i, pointers[i]);
+    printf("\nTest1\n");
+    for (i = 0; i < 120; i++) {
+        char *ptr = (char *) malloc(1);
+        //prints out address of initial and final address, if initial address is the same 
+        //as final that means malloc and free is working as intended
+        if (i==0 || i==119){
+            printf("%d: %p\n",i, ptr);
+        }
+        free(ptr);
     }
-
+    
 }
 
-//testing if free work properly, if using malloc uses same space as previous testcase then that mean it works!
 void test2(){
+    void *arr[120];
     int i;
-    char *pointers[10];
-    
-    printf("\n2: Testing free\n");
 
-    printf("BEFORE FREE: \n");
-    for (i = 0; i < 10; i++){
-        printf("%d: %p\n", i, pointers[i]);
+    // Allocate 120 1-byte chunks and store pointers in array
+    printf("\nTest2\n");;
+    for (i = 0; i < 120; i++) {
+        arr[i] = malloc(1);
+        if (i==0 || i==1 || i==119){
+            printf("%d: %p\n",i, arr[i]);
+        }
     }
-    
-    //freeing previous pointers
-    for (i=0; i<10; i++){
-        free(pointers[i]);
-    }
-    
-     printf("\nAFTER FREE AND ALLOCATING: \n");
-    //allocating 10 blocks of size 10
-    for (i = 0; i < 10; i++){
-        pointers[i] = (char*)malloc(10);
-        printf("%d: %p\n", i, pointers[i]);
-    }
-    
- 
 
+    //Dellocating all chunks
+    for (i = 0; i < 120; i++) {
+        free(arr[i]);
+    }
+    
 }
 
-void test3() {
+void testcoalesce() {
     printf("\n3: Testing for coalesce\n");
 
     int *ptr1 = (int*)malloc(3 * sizeof(int));
@@ -78,26 +72,11 @@ void test3() {
 }
 
 
-
 int main() {
-    // Testing malloc implementation.
-
-    for(int i = 0; i < 1; i++){
-        myPtrs[i] = (int *) malloc(500);
-    }
-    for(int i = 0; i < 10; i++){
-        printf("%d: %p\n", i, myPtrs[i]);
-    }
-
     
-    //test if malloc works
     test1();
-    
-    //testing if free works
     test2();
     
-    //test for Coalescing
-    test3();
-    
+ 
     return 0;
 }
