@@ -123,9 +123,12 @@ void myfree(void *ptr, char *file, int line) {
         fprintf(stderr, "Cannot free a null pointer. FILENAME: %s, LINE: %d\n", file, line);
         return;
     }
+    
+    //if not null there should be a struct meta header associated with it. 
+    //retrieves the header by subtracting the size of struct meta from the ptr
     struct meta *meta_ptr = (struct meta *) ((char *) ptr - sizeof(struct meta));
     if (!meta_ptr->reserved) {
-        fprintf(stderr, "Double free detected. FILENAME: %s, LINE: %d\n", file, line);
+        fprintf(stderr, "Invalid pointer. FILENAME: %s, LINE: %d\n", file, line);
         return;
     }
     meta_ptr->reserved = false;
@@ -147,6 +150,5 @@ void myfree(void *ptr, char *file, int line) {
         }
     }
 }
-
 
 
