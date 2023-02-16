@@ -5,16 +5,7 @@
 #define malloc(s) mymalloc(s, __FILE__, __LINE__);
 #define free(p) myfree(p, __FILE__, __LINE__);
 
-#ifndef MEMORY_SIZE
-#define  MEMORY_SIZE 5000
-#endif
-
-#define META_SIZE sizeof(struct meta);
-
-static char memory[MEMORY_SIZE];
-
-struct meta *find_space(size_t size);
-struct meta *allocate_space(struct meta *current_block, size_t size);
+static char memory[4096];
 
 void *mymalloc(size_t size, char *file, int line);
 void myfree(void *ptr, char *file, int line);
