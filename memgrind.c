@@ -1,7 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include "mymalloc.h"
 
-int *myPtrs[1000]; //Store malloc pointers. Arbitrary number chosen for array.
 
 //malloc() and immediately free() a 1-byte chunk, 120 times.
 void test1(){
@@ -37,6 +38,45 @@ void test2(){
         free(arr[i]);
     }
     
+}
+
+void test3(){
+    char *myPtrs[120];
+    int mallocPtrTracker[120];
+    for(int i = 0; i < 120; i++){
+        mallocPtrTracker[i] = -1;
+    }
+    int numOfMallocCalls = 0;
+    int count = 0;
+    int limit = 1;
+    int randNum;
+    while(numOfMallocCalls < 120){
+        randNum = rand() % 2 + 1; // Outputs 1 or 2 randomly.
+        if(randNum == 2){ // Malloc the current count position.
+            myPtrs[count] = malloc(1);
+            numOfMallocCalls++; //When this number hits 120. Exit the while loop.
+            mallocPtrTracker[count] = 1; //This position was last marked as malloc.
+            count++;
+            if(count > limit){
+                limit = count;
+                //printf("New limit: %d\n", limit);
+            }
+        }
+        else{ // Free the last malloc position.
+            if (count > 1) {
+                count--;
+                free(myPtrs[count]);
+                mallocPtrTracker[count] = 0; // This position was last marked as freed.
+            }
+        }
+    }
+    for (int i = 0; i < limit; i++){
+        if(mallocPtrTracker[i] == 1){ // Free any pointers that was not freed within the while loop.
+            free(myPtrs[i]);
+
+        }
+        //printf("%d: Last marked status: %d\n", i, mallocPtrTracker[i]);
+    }
 }
 
 void testcoalesce() {
@@ -76,6 +116,8 @@ int main() {
     
     test1();
     test2();
+    srand(time(NULL));
+    test3();
     
  
     return 0;
