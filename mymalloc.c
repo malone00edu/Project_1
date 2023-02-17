@@ -135,7 +135,6 @@ static int find_ptr(struct meta *givenPtr) {
 
     // If the given pointer is outside the scope of the heap. Return -1 (PTR_NOT_FOUND).
     if((char*) givenPtr < memory || (char*) givenPtr > memory + MEMORY_SIZE){
-        fprintf(stderr, "Pointer address is out of bounds.\n");
         return PTR_NOT_FOUND;
     }
     // Initial location status value = 0 (EMPTY);
