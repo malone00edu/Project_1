@@ -8,6 +8,6 @@
 // The heap that will be used by our implementation of malloc and free.
 static char memory[4096];
 
-// Our modified version of malloc and free. Errors will be displayed to the console.
+// Modified version of malloc and free. Errors will be displayed to the console.
 void *mymalloc(size_t size, char *file, int line);
 void myfree(void *ptr, char *file, int line);
