@@ -31,6 +31,7 @@ static struct meta *find_space(size_t size) {
         // If no suitable size is found, loop will end with current = NULL.
         if (!current->next) {
             current = NULL;
+            break;
         }
         current = current->next;
     }

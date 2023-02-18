@@ -39,7 +39,9 @@ void test2(){
     }
     
 }
-
+/*
+ * Malloc or free randomizer. Malloc one size. 1 will malloc it's respective size. 2 will free a previous malloc.
+ */
 void test3(){
     char *myPtrs[120];
     int mallocPtrTracker[120];
@@ -76,6 +78,59 @@ void test3(){
 
         }
         //printf("%d: Last marked status: %d\n", i, mallocPtrTracker[i]);
+    }
+}
+/*
+ * Malloc or free randomizer. Malloc two different sizes. 1 or 2 will malloc their respective sizes.
+ * 3 will free a previous malloc.
+ */
+void test4(){
+    char *myPtrs[120];
+    int ptrStatusTracker[120];
+    for(int i = 0; i < 120; i++){
+        ptrStatusTracker[i] = -1;
+    }
+    int numOfMallocCalls = 0;
+    int count = 0;
+    int limit = 1;
+    int randNum;
+    while(numOfMallocCalls < 120){
+        randNum = rand() % 3 + 1; // Outputs 1 to 3 randomly.
+        //printf("Random num: %d\n", randNum);
+        if(randNum == 1){ // Malloc the current count position.
+            myPtrs[count] = malloc(10);
+            numOfMallocCalls++; //When this number hits 120. Exit the while loop.
+            ptrStatusTracker[count] = 1; //This position was last marked as malloc.
+            count++;
+            if(count > limit){
+                limit = count;
+                //printf("New limit: %d\n", limit);
+            }
+        }
+        else if(randNum == 2){ // Malloc the current count position.
+            myPtrs[count] = malloc(20);
+            numOfMallocCalls++; //When this number hits 120. Exit the while loop.
+            ptrStatusTracker[count] = 2; //This position was last marked as malloc.
+            count++;
+            if(count > limit){
+                limit = count;
+                //printf("New limit: %d\n", limit);
+            }
+        }
+        else{ // Free the last malloc position.
+            if (count > 1) {
+                count--;
+                free(myPtrs[count]);
+                ptrStatusTracker[count] = 0; // This position was last marked as freed.
+            }
+        }
+    }
+    for (int i = 0; i < limit; i++){
+        if(ptrStatusTracker[i] != 0){ // Free any pointers that was not freed within the while loop.
+            free(myPtrs[i]);
+
+        }
+        //printf("%d: Last marked status: %d\n", i, ptrStatusTracker[i]);
     }
 }
 
@@ -118,6 +173,8 @@ int main() {
     test2();
     srand(time(NULL));
     test3();
+    srand(time(NULL));
+    test4();
     
  
     return 0;
