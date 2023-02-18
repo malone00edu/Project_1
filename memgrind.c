@@ -4,6 +4,7 @@
 #include <sys/time.h>
 #include "mymalloc.h"
 
+
 /*
  * Malloc() and immediately free() a 1-byte chunk, 120 times.
  */
@@ -191,7 +192,7 @@ void test5(){
 }
 
 /*
- * Implementation to test if the heap is correctly coalescing different sizes of byte chunks.
+ * Test to see if the heap is correctly coalescing different sizes of byte chunks.
  */
 void testcoalesce() {
     printf("\nTesting for coalesce\n");
@@ -255,69 +256,76 @@ int main() {
     printf("\nStress Tests:");
 
     struct timeval beginning, end;
-    double active;
+    double total;
+    double average;
     int laps;
 
+
     printf("\nTest1\n");
-    active = 0;
+    total = 0;
     for(laps = 0; laps < 50; laps++){
         gettimeofday(&beginning, NULL);
         test1();
         gettimeofday(&end, NULL);
-        active += (end.tv_sec - beginning.tv_sec) *1e6;
-        active += (active + (end.tv_usec - beginning.tv_usec)) *1e-6;
+        total += (end.tv_sec - beginning.tv_sec) * 1e6;
+        total += (total + (end.tv_usec - beginning.tv_usec)) * 1e-6;
     }
-    printf("Total runtime of %d laps = %f\n", laps, active);
+    average = total / 50;
+    printf("Average runtime of %d laps = %1.9f sec\n", laps, average);
 
 
     printf("\nTest2\n");
-    active = 0;
+    total = 0;
     for(laps = 0; laps < 50; laps++){
         gettimeofday(&beginning, NULL);
         test2();
         gettimeofday(&end, NULL);
-        active += (end.tv_sec - beginning.tv_sec) *1e6;
-        active += (active + (end.tv_usec - beginning.tv_usec)) *1e-6;
+        total += (end.tv_sec - beginning.tv_sec) * 1e6;
+        total += (total + (end.tv_usec - beginning.tv_usec)) * 1e-6;
     }
-    printf("Total runtime of %d laps = %f\n", laps, active);
+    average = total / 50;
+    printf("Average runtime of %d laps = %1.9f sec\n", laps, average);
 
 
     printf("\nTest3\n");
-    active = 0;
+    total = 0;
     for(laps = 0; laps < 50; laps++){
         gettimeofday(&beginning, NULL);
         srand(time(NULL));
         test3();
         gettimeofday(&end, NULL);
-        active += (end.tv_sec - beginning.tv_sec) *1e6;
-        active += (active + (end.tv_usec - beginning.tv_usec)) *1e-6;
+        total += (end.tv_sec - beginning.tv_sec) * 1e6;
+        total += (total + (end.tv_usec - beginning.tv_usec)) * 1e-6;
     }
-    printf("Total runtime of %d laps = %f\n", laps, active);
+    average = total / 50;
+    printf("Average runtime of %d laps = %1.9f sec\n", laps, average);
 
 
     printf("\nTest4\n");
-    active = 0;
+    total = 0;
     for(laps = 0; laps < 50; laps++){
         gettimeofday(&beginning, NULL);
         srand(time(NULL));
         test4();
         gettimeofday(&end, NULL);
-        active += (end.tv_sec - beginning.tv_sec) *1e6;
-        active += (active + (end.tv_usec - beginning.tv_usec)) *1e-6;
+        total += (end.tv_sec - beginning.tv_sec) * 1e6;
+        total += (total + (end.tv_usec - beginning.tv_usec)) * 1e-6;
     }
-    printf("Total runtime of %d laps = %f\n", laps, active);
+    average = total / 50;
+    printf("Average runtime of %d laps = %1.9f sec\n", laps, average);
 
 
     printf("\nTest5\n");
-    active = 0;
+    total = 0;
     for(laps = 0; laps < 50; laps++){
         gettimeofday(&beginning, NULL);
         test5();
         gettimeofday(&end, NULL);
-        active += (end.tv_sec - beginning.tv_sec) *1e6;
-        active += (active + (end.tv_usec - beginning.tv_usec)) *1e-6;
+        total += (end.tv_sec - beginning.tv_sec) * 1e6;
+        total += (total + (end.tv_usec - beginning.tv_usec)) * 1e-6;
     }
-    printf("Total runtime of %d laps = %f\n", laps, active);
+    average = total / 50;
+    printf("Average runtime of %d laps = %1.9f sec\n", laps, average);
 
     return 0;
 }
