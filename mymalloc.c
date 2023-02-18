@@ -169,7 +169,7 @@ void myfree(void *ptr, char *file, int line) {
     // Checks to see if a given pointer exists within the scope of the heap/linked list.
     int result = find_ptr(ptr);
     if (result == -1) {
-        fprintf(stderr, "Pointer does not exist within the heap/linked list."
+        fprintf(stderr, "Pointer does not exist within the heap/linked list. "
                         "FILENAME: %s, LINE: %d\n", file, line);
         return;
     }

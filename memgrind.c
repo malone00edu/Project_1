@@ -73,8 +73,8 @@ void test3(){
         }
     }
     for (int i = 0; i < limit; i++){
+        printf("%d: Last marked status: %d\n", i, ptrStatusTracker[i]);
         if(ptrStatusTracker[i] != 0){ // Free any pointers that was not freed within the while loop.
-            printf("%d: Last marked status: %d\n", i, ptrStatusTracker[i]);
             free(myPtrs[i]);
             ptrStatusTracker[i] = 0;
         }
@@ -100,7 +100,7 @@ void test4(){
     int limit = 1;
     int randNum;
     while(numOfMallocCalls < 120){
-        randNum = rand() % 3 + 1; // Outputs 1 to 3 randomly.
+        randNum = rand() % 4 + 1; // Outputs 1 to 4 randomly.
         //printf("Random num: %d\n", randNum);
         if(randNum == 1){ // Malloc the current count position if ranNum = 1
             myPtrs[count] = malloc(10);
@@ -122,7 +122,7 @@ void test4(){
                 //printf("New limit: %d\n", limit);
             }
         }
-        else{ // Else free the last malloc position if randNum = 3
+        else{ // Else free the last malloc position if randNum = 3 or 4
             if (count > 1) {
                 count--;
                 free(myPtrs[count]);
