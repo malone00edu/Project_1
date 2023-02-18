@@ -9,7 +9,9 @@
 #define PTR_NOT_FOUND (-1)
 #define EMPTY 0
 
-// The structure that holds all relevant metadata.
+/*
+ * The structure that holds all relevant metadata.
+ */
 struct meta {
     size_t size;
     bool reserved;
@@ -20,7 +22,9 @@ struct meta {
 // The head of the linked list in memory[MEMORY_SIZE].
 static struct meta *head = NULL;
 
-// Helper function. Finds appropriate space for requested size.
+/*
+ * Helper function. Finds appropriate space for requested size.
+ */
 static struct meta *find_space(size_t size) {
 
     struct meta *current = head;
@@ -40,7 +44,9 @@ static struct meta *find_space(size_t size) {
 
 }
 
-// Helper function. Allocates space for requested size.
+/*
+ * Helper function. Allocates space for requested size.
+ */
 static struct meta *allocate_space(struct meta *currentBlock, size_t size) {
 
     // If head is NULL. Initialize entirety of MEMORY_SIZE in memory array.
@@ -95,6 +101,9 @@ static struct meta *allocate_space(struct meta *currentBlock, size_t size) {
     return NULL;
 }
 
+/*
+ * Allocates space within heap if enough memory is found.
+ */
 void *mymalloc(size_t size, char *file, int line) {
 
     struct meta *metaPtr;
@@ -160,7 +169,9 @@ static int find_ptr(struct meta *givenPtr) {
     return location_status;
 }
 
-// free using eager approach
+/*
+ * Free space within the heap using the eager approach.
+ */
 void myfree(void *ptr, char *file, int line) {
     if (!ptr) {
         fprintf(stderr, "Cannot free a null pointer. FILENAME: %s, LINE: %d\n", file, line);
