@@ -1,7 +1,7 @@
 # Project_1
 2023 cs214 project 1
 
-**How malloc works & its implementation:**
+**How malloc works & its implementation:** <br>
 This implementation of mymalloc() is a dynamic memory allocation function that allocates a block of memory of the given size. It uses a linked list structure to keep track of free and reserved blocks of memory.
 
 The find_space() helper function goes through the linked list to find the first block of memory that is both free and large enough for the requested size plus the size of a metadata struct. If a block is found, a pointer to its metadata struct is returned. If not, NULL is returned.
