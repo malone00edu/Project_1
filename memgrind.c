@@ -135,7 +135,7 @@ void test4(){
 }
 
 void testcoalesce() {
-    printf("\n3: Testing for coalesce\n");
+    printf("\nTesting for coalesce\n");
 
     int *ptr1 = (int*)malloc(3 * sizeof(int));
     int *ptr2 = (int*)malloc(2 * sizeof(int));
@@ -164,17 +164,47 @@ void testcoalesce() {
     } else {
         printf("Coalescing unsuccessful.\n");
     }
+    
+    free(ptr4);
 }
 
 
 int main() {
+    /*Testing Errors*/
+    //testing what happens when you overfill memory.
+    int *m = malloc(sizeof(int)*5000);
     
+    //free an address that is not obtain from using malloc()
+    int x;
+    free(&x);
+    
+    //Calling free() with an address not at the start of a chunk.
+    int *p = malloc(sizeof(int)*2);
+    free(p + 1);
+    
+    //Calling free() a second time on the same pointer. 
+    int *q = p;
+    free(p);
+    free(q);
+    
+    //Testing for memory fragmentation
+    testcoalesce();
+    
+    /*Stress test*/
+    printf("\nStress Test");
     test1();
     test2();
     srand(time(NULL));
     test3();
     srand(time(NULL));
     test4();
+    
+    
+  
+    
+    
+
+    
     
  
     return 0;
