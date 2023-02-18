@@ -176,7 +176,7 @@ void myfree(void *ptr, char *file, int line) {
     //retrieves the header by subtracting the size of struct meta from the ptr
     struct meta *metaPtr = (struct meta *) ((char *) ptr - sizeof(struct meta));
     if (!metaPtr->reserved) {
-        fprintf(stderr, "Invalid pointer. FILENAME: %s, LINE: %d\n", file, line);
+        fprintf(stderr, "Double free detected. FILENAME: %s, LINE: %d\n", file, line);
         return;
     }
 
