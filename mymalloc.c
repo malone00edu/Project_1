@@ -6,16 +6,17 @@
 #define META_SIZE sizeof(struct meta);
 #define MEMORY_SIZE 4096
 #define PTR_FOUND 1
-#define PTR_NOT_FOUND -1
+#define PTR_NOT_FOUND (-1)
 #define EMPTY 0
 
 // The structure that holds all relevant metadata.
 struct meta {
     size_t size;
+    bool reserved;
     struct meta *next;
     struct meta *prev;
-    bool reserved;
 };
+
 // The head of the linked list in memory[MEMORY_SIZE].
 static struct meta *head = NULL;
 
@@ -168,7 +169,7 @@ void myfree(void *ptr, char *file, int line) {
     // Checks to see if a given pointer exists within the scope of the heap/linked list.
     int result = find_ptr(ptr);
     if (result == -1) {
-        fprintf(stderr, "Pointer does not exist within the heap/linked list. "
+        fprintf(stderr, "Pointer does not exist within the heap/linked list."
                         "FILENAME: %s, LINE: %d\n", file, line);
         return;
     }
