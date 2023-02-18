@@ -233,10 +233,15 @@ void testcoalesce() {
  */
 int main() {
     /*Testing Errors*/
-    //testing what happens when you overfill memory.
-    /*int *m = malloc(sizeof(int)*5000);
+
+    //Calling free with a NULL pointer.
+    struct meta *nPtr = NULL;
+    free(nPtr);
+
+    //Testing what happens when you overfill memory.
+    int *m = malloc(sizeof(int)*5000);
     
-    //free an address that is not obtain from using malloc()
+    //Free an address that is not obtain from using malloc()
     int x;
     free(&x);
     
@@ -249,8 +254,8 @@ int main() {
     free(p);
     free(q);
     
-    Testing for memory fragmentation
-    testcoalesce();*/
+    //Testing for memory fragmentation
+    testcoalesce();
 
     /*Stress test*/
     printf("\nStress Tests:");
