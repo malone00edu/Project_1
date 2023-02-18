@@ -4,21 +4,21 @@
 **How malloc works & its implementation:** <br>
 This implementation of mymalloc() is a dynamic memory allocation function that allocates a block of memory of the given size. It uses a linked list structure to keep track of free and reserved blocks of memory.
 
-The find_space() helper function goes through the linked list to find the first block of memory that is both free and large enough for the requested size plus the size of a metadata struct. If a block is found, a pointer to its metadata struct is returned. If not, NULL is returned.
+mymalloc() checks if the requested size is valid and if the linked list is empty. If the list is empty, it calls allocate_space(). If theres not enough space in memory, "Insufficient space for requested size" error messages will be return. Else, find_space() is called to find a block of memory. If a suitable block is found,it calls allocate_space() and returns the pointer to the data section of the block.
 
-The allocate_space() helper function takes a pointer to a block of memory and the requested size as arguments. It marks the block as reserved and returns a pointer to the data section if the size is equal to the requested size. If the size is less, it returns NULL. If the size is more, it creates a new block, updates the metadata, links it to the list, and returns a pointer to the data section.
+The find_space() helper function goes through the linked list to find the first block of memory that is both free and large enough for the requested size plus the size of a metadata struct. If a block is found, a pointer to its metadata struct is returned. Else, null is returned.
 
-mymalloc() checks if the requested size is valid and if the linked list is empty. If the list is empty, it calls allocate_space(). If there's not enough memory, it prints an error message and returns NULL. If the list isn't empty, it calls find_space() to find a block of memory. If it's found, it calls allocate_space() and returns the pointer to the data section of the allocated memory.
+The allocate_space() helper function checks a block of memory and requested size. It marks the block as reserved and returns a pointer to the data section if the size is equal to the requested size. If the size is less, it returns NULL. If the size is more, it creates a new block, updates the metadata, links it to the list, and returns a pointer to the data section.
 
 **How free works & its implementation:**
 
 myfree() deallocates the memory associated with the given pointer, updates the header information, and coalesces adjacent free blocks (eager approach) to avoid memory fragmentation. 
 
-The myfree() implementation first checks if the ptr passed to it is a null pointer, if it is,  prints an error message and returns. It calls the find_ptr() function to check if the given pointer exists within the scope of the heap/linked list. If it doesn't, it prints an error message and returns. If the ptr is not null, it assumes that it was previously allocated using mymalloc(), thus, there should be a struct meta header associated with it. It retrieves the header by subtracting the size of struct meta from the ptr.
+The myfree() implementation first checks if the ptr passed to it is a null pointer, if it is,  prints an error message and returns. The find_ptr() function to check if the given pointer exists within the linked list. If its not within the scope, "Pointer does not exist within the heap/linked list", will be return. If the ptr is not null, it assumes that it was previously allocated using mymalloc(), thus, there should be a struct meta header associated with it. It retrieves the header by subtracting the size of struct meta from the ptr.
 
-If the boolean "reserved" is false, that means the the memory is already freed or invalid so it prints an error message and returns (double free detected). If the memory is valid, reserved is true, it sets the value to false, thus the memory is now freed.
+If the boolean "reserved" is false, that means the the memory is already freed or invalid so it prints an error message and returns (double free detected). If the reserved is true, it sets the value to false, thus the memory is now freed.
 
-Next, the function checks if the previous or next memory block is free, and if so, it coalesces the blocks. If the previous block is free, myfree() combines the current block with the previous block, updating the size of the combined block and the pointers. If the next block is free, myfree() combines the current block with the next block.
+myfree() checks if the previous or next memory block is free, and if so, it coalesces the blocks. If the previous block is free, myfree() combines the current block with the previous block, updating the size of the combined block and the pointers. If the next block is free, myfree() combines the current block with the next block.
 
 
 **Testing** /*All scenarios mention here are tested in memgrind.c*/
