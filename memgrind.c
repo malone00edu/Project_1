@@ -1,51 +1,57 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/time.h>
 #include "mymalloc.h"
 
-//malloc() and immediately free() a 1-byte chunk, 120 times.
+/*
+ * Malloc() and immediately free() a 1-byte chunk, 120 times.
+ */
 void test1(){
+
     int i;
-    printf("\nTest1\n");
     for (i = 0; i < 120; i++) {
         char *ptr = (char *) malloc(1);
         //prints out address of initial and final address, if initial address is the same 
         //as final that means malloc and free is working as intended
-        if (i==0 || i==119){
+        /*if (i==0 || i==119){
             printf("%d: %p\n",i, ptr);
-        }
+        }*/
         free(ptr);
     }
     
 }
-
+/*
+ * First allocate 120 1-byte chunks and store the pointers in an array.
+ * Then free all allocated chunks within the heap using the stored pointers.
+ */
 void test2(){
+
     void *arr[120];
     int i;
 
     // Allocate 120 1-byte chunks and store pointers in array
-    printf("\nTest2\n");;
     for (i = 0; i < 120; i++) {
         arr[i] = malloc(1);
-        if (i==0 || i==1 || i==119){
+        /*if (i==0 || i==1 || i==119){
             printf("%d: %p\n",i, arr[i]);
-        }
+        }*/
     }
 
     //Dellocating all chunks
     for (i = 0; i < 120; i++) {
         free(arr[i]);
     }
-    
 }
+
 /*
  * Malloc or free randomizer. Malloc one size. 1 will malloc it's respective size. 2 will free a previous malloc.
  */
 void test3(){
-    printf("\nTest3\n");;
+
     char *myPtrs[120];
     int ptrStatusTracker[120];
-    for(int i = 0; i < 120; i++){
+    for(int i = 0; i < 120; i++){ // Replace garbage numbers stored in the array with -1
         ptrStatusTracker[i] = -1;
     }
     int numOfMallocCalls = 0;
@@ -73,26 +79,27 @@ void test3(){
         }
     }
     for (int i = 0; i < limit; i++){
-        printf("%d: Last marked status: %d\n", i, ptrStatusTracker[i]);
+        //printf("%d: Last marked status: %d\n", i, ptrStatusTracker[i]);
         if(ptrStatusTracker[i] != 0){ // Free any pointers that was not freed within the while loop.
             free(myPtrs[i]);
             ptrStatusTracker[i] = 0;
         }
     }
-    printf("\n-----------------------\n");
+    /*printf("\n-----------------------\n");
     for (int i = 0; i < limit; i++) { // Print all freed positions.
             printf("%d: Last marked status: %d\n", i, ptrStatusTracker[i]);
-    }
+    }*/
 }
+
 /*
  * Malloc or free randomizer. Malloc two different sizes. 1 or 2 will malloc their respective sizes.
  * 3 will free a previous malloc.
  */
 void test4(){
-    printf("\nTest4\n");;
+
     char *myPtrs[120];
     int ptrStatusTracker[120];
-    for(int i = 0; i < 120; i++){
+    for(int i = 0; i < 120; i++){ // Replace garbage numbers stored in the array with -1
         ptrStatusTracker[i] = -1;
     }
     int numOfMallocCalls = 0;
@@ -100,29 +107,27 @@ void test4(){
     int limit = 1;
     int randNum;
     while(numOfMallocCalls < 120){
-        randNum = rand() % 4 + 1; // Outputs 1 to 4 randomly.
+        randNum = rand() % 5 + 1; // Outputs 1 to 5 randomly.
         //printf("Random num: %d\n", randNum);
         if(randNum == 1){ // Malloc the current count position if ranNum = 1
-            myPtrs[count] = malloc(10);
+            myPtrs[count] = malloc(5);
             numOfMallocCalls++; //When this number hits 120. Exit the while loop.
             ptrStatusTracker[count] = 1; //This position was last marked as malloc.
             count++;
             if(count > limit){
                 limit = count;
-                //printf("New limit: %d\n", limit);
             }
         }
         else if(randNum == 2){ // Malloc the current count position if randNum = 2
-            myPtrs[count] = malloc(20);
+            myPtrs[count] = malloc(10);
             numOfMallocCalls++; //When this number hits 120. Exit the while loop.
             ptrStatusTracker[count] = 2; //This position was last marked as malloc.
             count++;
             if(count > limit){
                 limit = count;
-                //printf("New limit: %d\n", limit);
             }
         }
-        else{ // Else free the last malloc position if randNum = 3 or 4
+        else{ // Else free the last malloc position if randNum = 3, 4 or 5
             if (count > 1) {
                 count--;
                 free(myPtrs[count]);
@@ -131,21 +136,63 @@ void test4(){
         }
     }
     for (int i = 0; i < limit; i++){
-        printf("%d: Last marked status: %d\n", i, ptrStatusTracker[i]);
+        //printf("%d: Last marked status: %d\n", i, ptrStatusTracker[i]);
         if(ptrStatusTracker[i] != 0){ // Free any pointers that was not freed within the while loop.
             free(myPtrs[i]);
             ptrStatusTracker[i] = 0;
 
         }
     }
-    printf("\n-----------------------\n");
+    /*printf("\n-----------------------\n");
     for (int i = 0; i < limit; i++){ // Print all freed positions.
         if(ptrStatusTracker[i] == 0) {
             printf("%d: Last marked status: %d\n", i, ptrStatusTracker[i]);
         }
+    }*/
+}
+
+/*
+ * Malloc an ever-increasing sum until it triggers an insufficient space error. Free all malloc pointers within
+ * the array. Starting with the first (lower) index, then immediately free the last (upper) index. Increase lower
+ * by 1. Decrease upper by 1. Repeat until all pointers are freed.
+ */
+void test5(){
+
+    char *myPtrs[5000];
+    struct meta *ptr = malloc(1);
+    int num = 1;
+    int sum = 0;
+    int index = 0;
+    while(ptr){
+        sum = sum + num;
+        ptr = malloc(sum); // When requested malloc sum triggers an insufficient space error, exit the while loop.
+        //printf("Sum is %d: \n", sum);
+        if(ptr == NULL){
+            break;
+        }
+        fclose(stderr); // Comment fclose out to see verification of insufficient space error.
+        myPtrs[index] = (char *) ptr;
+        index++;
+        num++;
+    }
+
+    int lower = 0;
+    int upper = index - 1;
+    while(lower < upper){ // Free the 1st malloc sum of the array. Then free the last malloc sum of the array.
+        if(lower == upper){ // Free the middle index and exit loop.
+            free(myPtrs[lower]);
+            break;
+        }
+        free(myPtrs[lower]);
+        free(myPtrs[upper]);
+        lower++; // Move on to the next malloc sum. From left to right.
+        upper--; // Move on to the previous malloc sum. From right to left.
     }
 }
 
+/*
+ * Implementation to test if the heap is correctly coalescing different sizes of byte chunks.
+ */
 void testcoalesce() {
     printf("\nTesting for coalesce\n");
 
@@ -180,11 +227,13 @@ void testcoalesce() {
     free(ptr4);
 }
 
-
+/*
+ * Main is used to test error detection along with a variety of heap stress tests.
+ */
 int main() {
     /*Testing Errors*/
     //testing what happens when you overfill memory.
-    int *m = malloc(sizeof(int)*5000);
+    /*int *m = malloc(sizeof(int)*5000);
     
     //free an address that is not obtain from using malloc()
     int x;
@@ -199,25 +248,76 @@ int main() {
     free(p);
     free(q);
     
-    //Testing for memory fragmentation
-    testcoalesce();
-    
-    /*Stress test*/
-    printf("\nStress Test");
-    test1();
-    test2();
-    srand(time(NULL));
-    test3();
-    srand(time(NULL));
-    test4();
-    
-    
-  
-    
-    
+    Testing for memory fragmentation
+    testcoalesce();*/
 
-    
-    
- 
+    /*Stress test*/
+    printf("\nStress Tests:");
+
+    struct timeval beginning, end;
+    double active;
+    int laps;
+
+    printf("\nTest1\n");
+    active = 0;
+    for(laps = 0; laps < 50; laps++){
+        gettimeofday(&beginning, NULL);
+        test1();
+        gettimeofday(&end, NULL);
+        active += (end.tv_sec - beginning.tv_sec) *1e6;
+        active += (active + (end.tv_usec - beginning.tv_usec)) *1e-6;
+    }
+    printf("Total runtime of %d laps = %f\n", laps, active);
+
+
+    printf("\nTest2\n");
+    active = 0;
+    for(laps = 0; laps < 50; laps++){
+        gettimeofday(&beginning, NULL);
+        test2();
+        gettimeofday(&end, NULL);
+        active += (end.tv_sec - beginning.tv_sec) *1e6;
+        active += (active + (end.tv_usec - beginning.tv_usec)) *1e-6;
+    }
+    printf("Total runtime of %d laps = %f\n", laps, active);
+
+
+    printf("\nTest3\n");
+    active = 0;
+    for(laps = 0; laps < 50; laps++){
+        gettimeofday(&beginning, NULL);
+        srand(time(NULL));
+        test3();
+        gettimeofday(&end, NULL);
+        active += (end.tv_sec - beginning.tv_sec) *1e6;
+        active += (active + (end.tv_usec - beginning.tv_usec)) *1e-6;
+    }
+    printf("Total runtime of %d laps = %f\n", laps, active);
+
+
+    printf("\nTest4\n");
+    active = 0;
+    for(laps = 0; laps < 50; laps++){
+        gettimeofday(&beginning, NULL);
+        srand(time(NULL));
+        test4();
+        gettimeofday(&end, NULL);
+        active += (end.tv_sec - beginning.tv_sec) *1e6;
+        active += (active + (end.tv_usec - beginning.tv_usec)) *1e-6;
+    }
+    printf("Total runtime of %d laps = %f\n", laps, active);
+
+
+    printf("\nTest5\n");
+    active = 0;
+    for(laps = 0; laps < 50; laps++){
+        gettimeofday(&beginning, NULL);
+        test5();
+        gettimeofday(&end, NULL);
+        active += (end.tv_sec - beginning.tv_sec) *1e6;
+        active += (active + (end.tv_usec - beginning.tv_usec)) *1e-6;
+    }
+    printf("Total runtime of %d laps = %f\n", laps, active);
+
     return 0;
 }
