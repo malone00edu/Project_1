@@ -1,5 +1,7 @@
 # Project_1
-2023 cs214 project 1
+2023 cs214 project 1 <br>
+GROUP ID: 25 <br>
+NETID: jn689 & tmb240 SECTION: 06 & 01 <br>
 
 **How malloc works & its implementation:** <br>
 This implementation of mymalloc() is a dynamic memory allocation function that allocates a block of memory of the given size. It uses a linked list structure to keep track of free and reserved blocks of memory.
