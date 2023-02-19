@@ -50,7 +50,7 @@ Each task is run 50 times and the average time is printed. A lower average time 
 **/*test1*/** <br>involves using the malloc() function to allocate a 1-byte chunk of memory and immediately using the free() function to deallocate it. This is repeated 120 times and is implemented using a simple for loop.
 
 
-**/*test2*/** <br> involves using the malloc() function to allocate 120 1-byte chunks of memory and storing the pointers in an array. The program then uses the free() function to deallocate the chunks by iterating through the array with another for loop.
+**/*test2*/** <br> involves using the malloc() function to allocate 120 1-byte chunks of memory and storing the pointers in an array. It then uses the free() function to deallocate the chunks by iterating through the array with another for loop.
 
 **/*test3*/** <br>randomly alternates between allocating and deallocating 1-byte chunks of memory until 120 malloc calls have been made. After the loop is complete, it frees any remaining allocated memory.
 
