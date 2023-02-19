@@ -26,7 +26,8 @@ myfree() checks if the previous or next memory block is free, and if so, it coal
 **Testing** /*All scenarios mention here are tested in memgrind.c*/
 
 **Testing if malloc and free works:** <br>
-To check if malloc and free are functioning properly, we initalize three pointers, and allocate memory for each of them using malloc(). We can conclude that malloc is working correctly by printing the addresses and verifying that they are distinct.
+To check if malloc and free are functioning properly, we initalize three pointers, and allocate memory for each of them using malloc(). We can conclude that malloc is working correctly by printing the addresses and verifying that they are distinct. <br>
+Similarly, to test free, we can free all three ptrs, create a new pointer (to keep things controlled) and call malloc(). If the new pointer has the same address as the first ptr, we can confirm that free is working as intended.
 
 **Errors:**
 There are several error messages that can be returned, along with the filename and line where they occurred:
