@@ -13,11 +13,6 @@ void test1(){
     int i;
     for (i = 0; i < 120; i++) {
         char *ptr = (char *) malloc(1);
-        //prints out address of initial and final address, if initial address is the same 
-        //as final that means malloc and free is working as intended
-        /*if (i==0 || i==119){
-            printf("%d: %p\n",i, ptr);
-        }*/
         free(ptr);
     }
     
@@ -34,9 +29,6 @@ void test2(){
     // Allocate 120 1-byte chunks and store pointers in array
     for (i = 0; i < 120; i++) {
         arr[i] = malloc(1);
-        /*if (i==0 || i==1 || i==119){
-            printf("%d: %p\n",i, arr[i]);
-        }*/
     }
 
     //Dellocating all chunks
@@ -197,9 +189,9 @@ void test5(){
 void testcoalesce() {
     printf("\nTesting for coalesce\n");
 
-    int *ptr1 = (int*)malloc(3 * sizeof(int));
-    int *ptr2 = (int*)malloc(2 * sizeof(int));
-    int *ptr3 = (int*)malloc(2 * sizeof(int));
+    int *ptr1 = malloc(3);
+    int *ptr2 = malloc(2);
+    int *ptr3 = malloc(2);
     printf("Ptr1: %p\n", ptr1);
     printf("Ptr2: %p\n", ptr2);
     printf("Ptr3: %p\n", ptr3);
@@ -213,7 +205,7 @@ void testcoalesce() {
 
     // Verify that the free blocks have been coalesced
     // by checking the memory addresses
-    int *ptr4 = (int*)malloc(5 * sizeof(int));
+    int *ptr4 = (int*)malloc(5);
     printf("Ptr4: %p\n", ptr4);
     
     
@@ -228,10 +220,40 @@ void testcoalesce() {
     free(ptr4);
 }
 
+//Testing if malloc and free works properly
+void testMallocFree() {
+    
+    printf("Testing malloc and free \n");
+    char *ptr[3];
+    //test malloc
+    for (int i=0 ;i<3; i++){
+        ptr[i] =  malloc(1);
+        printf("%d: %p \n", i, ptr[i]);
+    }
+    
+    //test free
+    for (int i=0 ;i<3; i++){
+        free(ptr[i]);
+    }
+    //initialize a new ptr and call malloc
+    //checks if newptr address is the same as the first ptr, if its the same then free works.
+    char *newptr = malloc(1);
+    printf("newptr is at address: %p\n",newptr);
+    free(newptr);
+
+    
+}
+    
+    
+
+
 /*
  * Main is used to test error detection along with a variety of heap stress tests.
  */
 int main() {
+    /*Testing malloc and free*/
+    testMallocFree();
+    
     /*Testing Errors*/
 
     //Calling free with a NULL pointer.
