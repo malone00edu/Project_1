@@ -236,7 +236,7 @@ void testMallocFree() {
         free(ptr[i]);
     }
     //initialize a new ptr and call malloc
-    //checks if newptr address is the same as the first ptr, if its the same then free works.
+    //checks if newptr address is the same as the first ptr, if it's the same then free works.
     char *newptr = malloc(1);
     printf("newptr is at address: %p\n",newptr);
     free(newptr);
