@@ -15,7 +15,7 @@ void test1(){
         char *ptr = (char *) malloc(1);
         free(ptr);
     }
-    
+
 }
 /*
  * First allocate 120 1-byte chunks and store the pointers in an array.
@@ -187,7 +187,7 @@ void test5(){
  * Test to see if the heap is correctly coalescing different sizes of byte chunks.
  */
 void testcoalesce() {
-    printf("\nTesting for coalesce\n");
+    printf("\nTesting for coalesce:\n");
 
     int *ptr1 = malloc(3);
     int *ptr2 = malloc(2);
@@ -207,8 +207,8 @@ void testcoalesce() {
     // by checking the memory addresses
     int *ptr4 = (int*)malloc(5);
     printf("Ptr4: %p\n", ptr4);
-    
-    
+
+
     /*If it is equal, that means the three separate free blocks have been
     coalesced into one large block and ptr4 is using the memory from this large block.*/
     if (ptr4 == ptr1) {
@@ -216,35 +216,36 @@ void testcoalesce() {
     } else {
         printf("Coalescing unsuccessful.\n");
     }
-    
+
     free(ptr4);
 }
 
 //Testing if malloc and free works properly
 void testMallocFree() {
-    
-    printf("Testing malloc and free \n");
+
+    printf("\nTesting malloc and free: \n");
     char *ptr[3];
     //test malloc
     for (int i=0 ;i<3; i++){
-        ptr[i] =  malloc(1);
+        ptr[i] =  malloc(10);
         printf("%d: %p \n", i, ptr[i]);
     }
-    
+
     //test free
     for (int i=0 ;i<3; i++){
         free(ptr[i]);
     }
     //initialize a new ptr and call malloc
     //checks if newptr address is the same as the first ptr, if it's the same then free works.
-    char *newptr = malloc(1);
+    char *newptr = malloc(20);
     printf("newptr is at address: %p\n",newptr);
     free(newptr);
+    printf("\n");
 
-    
+
 }
-    
-    
+
+
 
 
 /*
@@ -253,29 +254,31 @@ void testMallocFree() {
 int main() {
     /*Testing malloc and free*/
     testMallocFree();
-    
+
     /*Testing Errors*/
 
+    printf("Testing various errors:\n");
     //Calling free with a NULL pointer.
     struct meta *nPtr = NULL;
     free(nPtr);
 
     //Testing what happens when you overfill memory.
-    int *m = malloc(sizeof(int)*5000);
-    
+    struct meta *mPtr= malloc(5000);
+    free(mPtr);
+
     //Free an address that is not obtain from using malloc()
     int x;
     free(&x);
-    
+
     //Calling free() with an address not at the start of a chunk.
     int *p = malloc(sizeof(int)*2);
     free(p + 1);
-    
+
     //Calling free() a second time on the same pointer. 
     int *q = p;
     free(p);
     free(q);
-    
+
     //Testing for memory fragmentation
     testcoalesce();
 
