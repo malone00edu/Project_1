@@ -1,6 +1,7 @@
 # Project_1
 2023 cs214 project 1 <br>
 GROUP ID: 25 <br>
+Name: Johnny Nguyen & Taze Balbosa
 NETID: jn689 & tmb240 SECTION: 06 & 01 <br>
 
 **How malloc works & its implementation:** <br>
