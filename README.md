@@ -6,6 +6,8 @@ NETID: jn689 & tmb240 SECTION: 06 & 01 <br>
 **How malloc works & its implementation:** <br>
 This implementation of mymalloc() is a dynamic memory allocation function that allocates a block of memory of the given size. It uses a linked list structure to keep track of free and reserved blocks of memory.
 
+The struct meta has been used to implement a linked list for managing memory allocation and deallocation. It acts as a memory block that holds information such as the size of the block, its reservation status, and pointers to the next and previous blocks. Since metadata plays a crucial role in managing the allocation process, it has a fixed space of 32 bytes within the memory.
+
 mymalloc() checks if the requested size is valid and if the linked list is empty. If the list is empty, it calls allocate_space(). If theres not enough space in memory, "Insufficient space for requested size" error messages will be return. Else, find_space() is called to find a block of memory. If a suitable block is found,it calls allocate_space() and returns the pointer to the data section of the block.
 
 The find_space() helper function goes through the linked list to find the first block of memory that is both free and large enough for the requested size plus the size of a metadata struct. If a block is found, a pointer to its metadata struct is returned. Else, null is returned.
@@ -22,6 +24,9 @@ If the boolean "reserved" is false, that means the the memory is already freed o
 
 myfree() checks if the previous or next memory block is free, and if so, it coalesces the blocks. If the previous block is free, myfree() combines the current block with the previous block, updating the size of the combined block and the pointers. If the next block is free, myfree() combines the current block with the next block.
 
+
+**Instructions for MakeFile**<br>
+Navigate to the directory where this assignment is stored using the terminal on a Linux device, and then type "make" in the same folder. The purpose of this is to make sure the program compiles properly.
 
 **Testing** /*All scenarios mention here are tested in memgrind.c*/
 
