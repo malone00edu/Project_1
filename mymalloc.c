@@ -3,7 +3,7 @@
 #include <assert.h>
 #include "mymalloc.h"
 
-#define META_SIZE sizeof(struct meta);
+#define META_SIZE sizeof(struct meta)
 #define MEMORY_SIZE 4096
 #define PTR_FOUND 1
 #define PTR_NOT_FOUND (-1)
@@ -47,50 +47,44 @@ static struct meta *find_space(size_t size) {
 /*
  * Helper function. Allocates space for requested size.
  */
-static struct meta *allocate_space(struct meta *current, size_t size) {
+static struct meta *allocate_space(struct meta *currentBlock, size_t size) {
 
     // If head is NULL. Initialize entirety of MEMORY_SIZE in memory array.
-    if (!current) {
+    if (!currentBlock) {
         head = (void *) memory;
-        head->size = MEMORY_SIZE - META_SIZE
+        head->size = MEMORY_SIZE - META_SIZE;
         head->next = NULL;
         head->prev = NULL;
         head->reserved = false;
-        current = head;
-
-        // If current block size is equal to requested size.
-        if (current->size == size) {
-            current->size = size;
-            current->reserved = true;
-            return (void *) current + META_SIZE;
-        }
+        currentBlock = head;
     }
 
-    // If current block size is equal to requested size + metadata.
-    if (current->size == size + sizeof(struct meta)) {
-        current->size = size;
-        current->reserved = true;
-        return (void *) current + META_SIZE;
+    // If currentBlock size is equal to requested size.
+    if (currentBlock->size == size) {
+        currentBlock->size = size;
+        currentBlock->reserved = true;
+        return (void *) currentBlock + META_SIZE;
     }
     /*
-     * If current block size is greater than requested size + metadata.
-     * Extract extra space from current block size and create new free space with this extra space.
+     * If currentBlock size is greater than requested size + metadata.
+     * Extract extra space from currentBlock block size and create new free space with this extra space.
      * Mark the new free space as not reserved.
      */
-    if (current->size > size + sizeof(struct meta)) {
-        // Obtain the address of the new block.
-        struct meta *new_block = (struct meta*) ((char *) current + sizeof(struct meta) + size);
-        new_block->size = current->size - size - META_SIZE;
-        new_block->reserved = false;
-        new_block->next = current->next;
-        new_block->prev = current;
+    if (currentBlock->size > size + sizeof(struct meta)) {
 
-        // The remaining space of the current block should now equal that of the requested size + metadata.
-        // Use this remaining space of the current block to allocate and mark as reserved.
-        current->size = size;
-        current->reserved = true;
-        current->next = new_block;
-        return (void *) current + META_SIZE;
+        // Obtain the address of the new block.
+        struct meta *newBlock = (struct meta*) ((char *) currentBlock + sizeof(struct meta) + size);
+        newBlock->size = currentBlock->size - size - META_SIZE;
+        newBlock->reserved = false;
+        newBlock->next = currentBlock->next;
+        newBlock->prev = currentBlock;
+
+        // The remaining space of the currentBlock should now equal that of the requested size + metadata.
+        // Use this remaining space of the currentBlock to allocate and mark as reserved.
+        currentBlock->size = size;
+        currentBlock->reserved = true;
+        currentBlock->next = newBlock;
+        return (void *) currentBlock + META_SIZE;
     }
     return NULL;
 }
@@ -100,10 +94,16 @@ static struct meta *allocate_space(struct meta *current, size_t size) {
  */
 void *mymalloc(size_t size, char *file, int line) {
 
-    struct meta *metaPtr;
     if (size <= 0) {
         return NULL;
     }
+    if (size > MEMORY_SIZE - META_SIZE) {// If requested size is greater than heap capacity.
+        fprintf(stderr,
+                "Insufficient space for requested size. FILENAME: %s, LINE: %d\n", file, line);
+        return NULL;
+    }
+
+    struct meta *metaPtr;
     //If head is equal to NULL. Initialize the head of the linked list and return pointer.
     if (!head) {
         metaPtr = allocate_space(NULL, size); // Allocate space.

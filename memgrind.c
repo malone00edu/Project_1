@@ -151,15 +151,15 @@ void test4(){
  */
 void test5(){
 
-    char *myPtrs[5000];
+    char *myPtrs[120];
     struct meta *ptr = malloc(1);
+    myPtrs[0] = (char *) ptr;
+    int sum = 1;
     int num = 1;
-    int sum = 0;
-    int index = 0;
+    int index = 1;
     while(ptr){
         sum = sum + num;
         ptr = malloc(sum); // When requested malloc sum triggers an insufficient space error, exit the while loop.
-        //printf("Sum is %d: \n", sum);
         if(ptr == NULL){
             break;
         }
@@ -168,18 +168,17 @@ void test5(){
         index++;
         num++;
     }
-
     int lower = 0;
     int upper = index - 1;
     while(lower < upper){ // Free the 1st malloc sum of the array. Then free the last malloc sum of the array.
-        if(lower == upper){ // Free the middle index and exit loop.
-            free(myPtrs[lower]);
-            break;
-        }
         free(myPtrs[lower]);
         free(myPtrs[upper]);
         lower++; // Move on to the next malloc sum. From left to right.
         upper--; // Move on to the previous malloc sum. From right to left.
+        if(lower == upper){ // Free the middle index and exit loop.
+            free(myPtrs[lower]);
+            break;
+        }
     }
 }
 
@@ -216,7 +215,6 @@ void testcoalesce() {
     } else {
         printf("Coalescing unsuccessful.\n");
     }
-
     free(ptr4);
 }
 
@@ -227,7 +225,7 @@ void testMallocFree() {
     char *ptr[3];
     //test malloc
     for (int i=0 ;i<3; i++){
-        ptr[i] =  malloc(10);
+        ptr[i] =  (char*) malloc(20);
         printf("%d: %p \n", i, ptr[i]);
     }
 
@@ -237,23 +235,16 @@ void testMallocFree() {
     }
     //initialize a new ptr and call malloc
     //checks if newptr address is the same as the first ptr, if it's the same then free works.
-    char *newptr = malloc(20);
+    char *newptr = (char*) malloc(40);
     printf("newptr is at address: %p\n",newptr);
     free(newptr);
-    printf("\n");
-
-
 }
-
-
 
 
 /*
  * Main is used to test error detection along with a variety of heap stress tests.
  */
 int main() {
-    /*Testing malloc and free*/
-    testMallocFree();
 
     /*Testing Errors*/
 
@@ -263,7 +254,7 @@ int main() {
     free(nPtr);
 
     //Testing what happens when you overfill memory.
-    struct meta *mPtr= malloc(5000);
+    struct meta *mPtr= malloc(6000);
     free(mPtr);
 
     //Free an address that is not obtain from using malloc()
@@ -274,10 +265,13 @@ int main() {
     int *p = malloc(sizeof(int)*2);
     free(p + 1);
 
-    //Calling free() a second time on the same pointer. 
+    //Calling free() a second time on the same pointer.
     int *q = p;
     free(p);
     free(q);
+
+    //Testing malloc and free*
+    testMallocFree();
 
     //Testing for memory fragmentation
     testcoalesce();
