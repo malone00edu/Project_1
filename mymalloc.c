@@ -95,6 +95,8 @@ static struct meta *allocate_space(struct meta *currentBlock, size_t size) {
 void *mymalloc(size_t size, char *file, int line) {
 
     if (size <= 0) {
+        fprintf(stderr,
+                "Cannot allocate space for zero or less size. FILENAME: %s, LINE: %d\n", file, line);
         return NULL;
     }
     if (size > MEMORY_SIZE - META_SIZE) {// If requested size is greater than heap capacity.
